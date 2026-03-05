@@ -8,6 +8,65 @@ Die neuesten Sessions stehen oben. Fuer Projekt-Kontext siehe PROJECT_BRAIN.md, 
 
 ## 2026
 
+### Session 03.03.2026-B (Operations)
+
+**Teilnehmer:** Loris + Claude (Operations)
+
+**Ziel:** Phase 1 Flow definieren, Projektstruktur bauen, GitHub Repo aufsetzen, Gmail OAuth einrichten
+
+**Erreicht:**
+
+#### Flow-Design
+- 4 Flows als interaktives React-Diagramm (Happy Path, Antwort, Korrektur, Edge Cases)
+- Happy Path: Architekten-Anfrage → Bridge übersetzt → Telegram-Review → Freigabe → Judyta
+- Alle Edge Cases dokumentiert: Projekt-Zuordnung fehlgeschlagen, Low-Confidence, Ablehnung, API-Fehler
+
+#### Entscheidungen
+- O4 geklärt: Phase 1 alles über E&W, Direktmodus später als Feature-Flag
+- Draft-Freigabe: Telegram Inline Keyboard (Freigeben/Bearbeiten/Ablehnen), kein Gmail-Draft-Interface
+- Spracherkennung: Judyta wird informiert nur noch PL zu schreiben → Vereinfachung
+- Thread-Zuordnung: Gmail Thread-ID primär, Subject-Parsing Fallback, manuelle Zuordnung via Telegram
+- Gmail Polling: 5 Min Intervall (Pub/Sub erst wenn nötig)
+- E-Mail-Status-Flow: RECEIVED → DRAFT → APPROVED_BY_EW → SENT / REJECTED
+
+#### Projektstruktur (27 Dateien)
+- app.py — FastAPI Server, Polling-Loop, /health, /projects
+- backend/email_service.py — Gmail Inbound-Polling, Draft-Erstellung, Attachment-Handling
+- backend/translation_service.py — Claude Sonnet DE↔PL, TERMINOLOGY.md Kontext
+- backend/telegram_service.py — Inline Keyboard, Callback-Handling
+- backend/project_service.py — 3-stufige Thread-Zuordnung
+- backend/models.py — Alle Tabellen (Phase 1 aktiv, Phase 2-4 Stubs)
+- backend/config.py, database.py, terminology.py
+- data/terminology_de_pl.json
+- tests/test_translation.py (echte Kom. Kern Korrespondenz als Testdaten)
+- docs/ — 5MD vollständig
+
+#### Lokaler Pfad
+`/Users/loriss/Documents/2. Business/11. STREIT AI SOULTIONS/1. Streit AI Solutions/1. Projekt [Clara]/Clara - Bridge MVP/1. Software/`
+
+#### GitHub Repo
+- streitAIsolutions/Clara_bridge — live, 2 Commits (Initial + Phase 1 Code)
+- HTTPS Remote, SSH noch nicht eingerichtet
+
+#### Gmail OAuth
+- Google Cloud Projekt: Frank-Calendar (wiederverwendet)
+- Gmail API aktiviert
+- OAuth Consent Screen konfiguriert, frank.eulen.weischer@gmail.com als Test-User
+- credentials.json: client_secret_924423517309-....json
+- token.json: Generiert, liegt in 1. Software/, in .gitignore gesichert
+
+**Fehlend nach Session-Ende:**
+- Telegram Webhook-Endpoint in app.py fehlt (kein /telegram/webhook)
+- Railway noch nicht aufgesetzt
+- Kein E2E-Test gelaufen
+
+**5MD-Updates:**
+- PROJECT_BRAIN: O4 geklärt, Entscheidungen Phase 1 ergänzt
+- TODO: 21 konkrete Tasks in 6 Untergruppen (P1.1-P1.21)
+- SESSION_LOG: Diese Session
+- ARCHITECTURE: Phase 1 Entscheidungen (Polling, Thread-Zuordnung, Routing, Telegram, Status-Flow)
+- TERMINOLOGY: Keine Änderung
+
 ### Session 03.03.2026-B (Phase 1 Flow-Design im Clara Bridge Projekt)
 
 **Teilnehmer:** Loris + Claude

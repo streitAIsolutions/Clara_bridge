@@ -4,9 +4,10 @@
 
 ## Aktuelle Prioritaeten
 
-1. **GitHub Repo anlegen** - streitAIsolutions/Clara_bridge
-2. **Gmail OAuth Credentials pruefen** - Google Cloud Console checken
-3. **Phase 1 Implementierung starten** - Grundstruktur + Gmail + Uebersetzung
+1. **Railway Service aufsetzen** — eigener Service, ENV Variables (Token, Anthropic Key, Telegram, DB)
+2. **Telegram Webhook-Endpoint** — /telegram/webhook fehlt in app.py (Callback-Handling nicht erreichbar)
+3. **Erster E2E-Test** — Polling + Übersetzung mit echter Kom. Kern Mail
+4. **Telegram Integration vervollständigen** — Freigabe-Buttons → Draft senden
 
 ---
 
@@ -15,47 +16,47 @@
 ### 1A: Setup & Infrastruktur
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.1 | GitHub Repo anlegen + Grundstruktur (siehe ARCHITECTURE.md) | Offen | Hoch |
-| P1.2 | Railway Service aufsetzen (eigener Container) | Offen | Hoch |
-| P1.3 | PostgreSQL DB aufsetzen (eigene DB) + Basis-Tabellen | Offen | Hoch |
+| P1.1 | GitHub Repo anlegen + Grundstruktur (27 Dateien) | **ERLEDIGT** | Hoch |
+| P1.2 | Railway Service aufsetzen (eigener Container) | **Offen** | Hoch |
+| P1.3 | PostgreSQL DB aufsetzen (eigene DB) + Basis-Tabellen | **Offen** | Hoch |
 
 ### 1B: Gmail Integration
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.4 | Gmail OAuth Credentials pruefen/einrichten | Offen | Hoch |
-| P1.5 | Gmail Inbound: Polling alle 5 Min (neue Mails erkennen) | Offen | Hoch |
-| P1.6 | Gmail Outbound: Draft erstellen + senden nach Freigabe | Offen | Hoch |
-| P1.7 | Thread-Erkennung: Gmail Thread-ID + Subject-Parsing Fallback | Offen | Hoch |
-| P1.8 | Attachment-Handling: Durchreichen (PDFs etc.) | Offen | Hoch |
+| P1.4 | Gmail OAuth Credentials prüfen/einrichten | **ERLEDIGT** | Hoch |
+| P1.5 | Gmail Inbound: Polling alle 5 Min (neue Mails erkennen) | **Im Code** | Hoch |
+| P1.6 | Gmail Outbound: Draft erstellen + senden nach Freigabe | **Im Code** | Hoch |
+| P1.7 | Thread-Erkennung: Gmail Thread-ID + Subject-Parsing Fallback | **Im Code** | Hoch |
+| P1.8 | Attachment-Handling: Durchreichen (PDFs etc.) | **Im Code** | Hoch |
 
 ### 1C: Uebersetzung
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.9 | Uebersetzungs-Engine DE→PL (Claude Sonnet + TERMINOLOGY.md) | Offen | Hoch |
-| P1.10 | Uebersetzungs-Engine PL→DE (Claude Sonnet + TERMINOLOGY.md) | Offen | Hoch |
-| P1.11 | Spracherkennung (DE vs PL) | Offen | Mittel |
-| P1.12 | Low-Confidence Markierung bei unbekannten Begriffen | Offen | Mittel |
+| P1.9 | Uebersetzungs-Engine DE→PL (Claude Sonnet + TERMINOLOGY.md) | **Im Code** | Hoch |
+| P1.10 | Uebersetzungs-Engine PL→DE (Claude Sonnet + TERMINOLOGY.md) | **Im Code** | Hoch |
+| P1.11 | Spracherkennung (DE vs PL) | **Im Code** | Mittel |
+| P1.12 | Low-Confidence Markierung bei unbekannten Begriffen | **Im Code** | Mittel |
 
 ### 1D: Telegram Human-in-the-Loop
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.13 | Telegram: Notification bei neuer Inbound-Mail | Offen | Hoch |
-| P1.14 | Telegram: Uebersetzungs-Preview + Inline Keyboard (Freigeben/Bearbeiten/Ablehnen) | Offen | Hoch |
-| P1.15 | Telegram: Callback-Handling (Freigabe → Draft senden) | Offen | Hoch |
-| P1.16 | Telegram: Manuelle Projekt-Zuordnung (Fallback) | Offen | Mittel |
+| P1.13 | Telegram: Notification bei neuer Inbound-Mail | **Im Code** | Hoch |
+| P1.14 | Telegram: Uebersetzungs-Preview + Inline Keyboard (Freigeben/Bearbeiten/Ablehnen) | **Im Code** | Hoch |
+| P1.15 | Telegram: Callback-Handling — **/telegram/webhook Endpoint fehlt in app.py** | **OFFEN** | Hoch |
+| P1.16 | Telegram: Manuelle Projekt-Zuordnung (Fallback) | **Im Code** | Mittel |
 
 ### 1E: Projekt-Management
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.17 | Projekt-Anlage bei neuer Anfrage (automatisch + manuell) | Offen | Mittel |
-| P1.18 | Basis-Status-Tracking pro Projekt | Offen | Mittel |
-| P1.19 | E-Mail-Status-Tracking (RECEIVED→DRAFT→APPROVED→SENT) | Offen | Hoch |
+| P1.17 | Projekt-Anlage bei neuer Anfrage (automatisch + manuell) | **Im Code** | Mittel |
+| P1.18 | Basis-Status-Tracking pro Projekt | **Im Code** | Mittel |
+| P1.19 | E-Mail-Status-Tracking (RECEIVED→DRAFT→APPROVED→SENT) | **Im Code** | Hoch |
 
 ### 1F: Testing
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.20 | End-to-End Test: Inbound Mail → Uebersetzung → Draft → Freigabe → Send | Offen | Hoch |
-| P1.21 | Uebersetzungsqualitaet testen mit Kom. Kern Korrespondenz | Offen | Hoch |
+| P1.20 | End-to-End Test: Inbound Mail → Uebersetzung → Draft → Freigabe → Send | **Offen** | Hoch |
+| P1.21 | Uebersetzungsqualitaet testen mit Kom. Kern Korrespondenz | **Offen** | Hoch |
 
 ---
 

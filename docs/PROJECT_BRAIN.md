@@ -6,13 +6,14 @@
 2. **Lies SESSION_LOG.md** (letzte 2-3 Sessions) - Verstehe wo wir stehen
 3. **Lies TODO.md** - Verstehe was ansteht
 
-**Aktueller Stand (03.03.2026):**
-- **Konzeptphase abgeschlossen** — CLARA_BRIDGE_CONCEPT.md erstellt und freigegeben
-- **Phase 1 Flow definiert** — 4 Flows dokumentiert (Happy Path, Antwort, Korrektur, Edge Cases)
-- **Kein Code geschrieben** — Repo-Setup + Phase 1 Implementierung als naechstes
-- **Repo noch nicht angelegt** — `streitAIsolutions/Clara_bridge` geplant
-- **Test-Gmail:** frank.eulen.weischer@gmail.com (vorhanden, OAuth Credentials pruefen)
-- **Naechster Schritt:** Repo anlegen, Gmail OAuth pruefen, Phase 1 Implementierung starten
+**Aktueller Stand (05.03.2026):**
+- **Phase 1 Code implementiert** — Grundstruktur vollstaendig (27 Dateien, 2 Commits)
+- **Repo live:** `streitAIsolutions/Clara_bridge` auf GitHub
+- **Gmail OAuth:** Token generiert fuer `frank.eulen.weischer@gmail.com`, in .gitignore gesichert
+- **Google Cloud:** Gmail API aktiviert, OAuth konfiguriert
+- **Railway:** Noch nicht aufgesetzt (naechste Session)
+- **Noch offen:** Telegram Webhook-Endpoint in app.py fehlt, kein E2E-Test, kein Deploy
+- **Naechster Schritt:** Railway Service aufsetzen, ENV Variables setzen, erster E2E-Test (Polling + Uebersetzung mit echter Kom. Kern Mail)
 
 **Entscheidungen Phase 1 (03.03.2026):**
 - E-Mail-Routing: Alles ueber E&W (Direktmodus spaeter als Feature-Flag)
@@ -37,7 +38,7 @@ KI-gestuetzter Beschaffungsassistent fuer Handwerksbetriebe. Automatisiert den A
 | Modul | Funktion | Status | Projekt |
 |-------|----------|--------|---------|
 | Clara Voice | KI-Telefonassistent | Live (Frank) | Eigenes Claude-Projekt |
-| **Clara Bridge** | **KI-Beschaffungsassistent** | **Konzeptphase** | **Dieses Projekt** |
+| **Clara Bridge** | **KI-Beschaffungsassistent** | **Phase 1 in Entwicklung** | **Dieses Projekt** |
 
 ---
 
@@ -60,7 +61,7 @@ KI-gestuetzter Beschaffungsassistent fuer Handwerksbetriebe. Automatisiert den A
 
 | Phase | Inhalt | Status | Abhaengigkeiten |
 |-------|--------|--------|-----------------|
-| 1 | E-Mail Relay + Uebersetzung DE↔PL | **ALS NAECHSTES** | Gmail API, Repo-Setup |
+| 1 | E-Mail Relay + Uebersetzung DE↔PL | **IN ENTWICKLUNG** | Gmail API ✅, Repo ✅, Railway offen |
 | 2 | PDF-Parsing + Anforderungs-Extraktion | Geplant | Phase 1, Beispiel-PDFs |
 | 3 | Angebotsvalidierung (Quality Gate) | Geplant | Phase 2, ekookna Angebots-PDF |
 | 4 | Kalkulation + E&W-Angebot | Geplant | Phase 3, E&W Kalkulationsregeln |
@@ -134,12 +135,16 @@ Clara Bridge startet mit einem einzelnen Chat (Operations + QG kombiniert). Bei 
 
 ## Changelog
 
-### 03.03.2026
-- Projekt-Konzept erstellt (CLARA_BRIDGE_CONCEPT.md)
-- 5MD-Struktur aufgesetzt
-- Entscheidungen: Eigenes Repo, eigenes Claude-Projekt, Gmail API, Sonnet fuer Uebersetzung
-- Codename "Clara Bridge" gewaehlt
-- Phase 1 Flow definiert: 4 Flows (Happy Path, Antwort, Korrektur, Edge Cases)
-- O4 geklaert: Phase 1 ueber E&W, spaeter Direktmodus
-- Draft-Freigabe via Telegram Inline Keyboard beschlossen
-- Thread-Zuordnung Strategie: Thread-ID + Subject-Parsing + manueller Fallback
+### 05.03.2026
+- 5MD auf aktuellen Code-Stand gebracht (war veraltet)
+
+### 03.03.2026 (Session B)
+- GitHub Repo live: streitAIsolutions/Clara_bridge
+- Phase 1 Grundstruktur implementiert (27 Dateien):
+  - app.py, email_service.py, translation_service.py, telegram_service.py, project_service.py
+  - models.py (Phase 1 aktiv + Phase 2-4 Stubs), database.py, config.py
+  - tests/test_translation.py, data/terminology_de_pl.json
+- Google Cloud: Gmail API aktiviert, OAuth konfiguriert
+- Gmail Token generiert fuer frank.eulen.weischer@gmail.com
+- token.json in .gitignore gesichert
+- Fehlend: Telegram Webhook-Endpoint, Railway Deploy, E2E-Test
