@@ -8,7 +8,7 @@
 
 Clara Bridge ist ein KI-gestützter Beschaffungsassistent für Handwerksbetriebe. Automatisiert den Angebotsworkflow zwischen Auftraggeber (Architekturbüro), Handwerksbetrieb (Eulen & Weischer) und Lieferant (ekookna.pl, Polnisch).
 
-**Status:** Phase 1 in Entwicklung. Repo live, Gmail OAuth eingerichtet, Railway ausstehend.
+**Status:** Phase 1 deployed. Railway live: https://clara-bridge-production.up.railway.app
 **Repo:** streitAIsolutions/Clara_bridge
 **Lokaler Pfad:** ~/Documents/2.\ Business/11.\ STREIT\ AI\ SOULTIONS/1.\ Streit\ AI\ Solutions/1.\ Projekt\ \[Clara\]/Clara\ -\ Bridge\ MVP/1.\ Software
 
@@ -81,8 +81,7 @@ Nach jedem relevanten Change: python3 tests/test_translation.py
 ## Aktive Blocker
 
 - token.json: In .gitignore — niemals committen. Für Railway als ENV Variable (JSON-String)
-- Telegram Webhook: /telegram/webhook fehlt in app.py — Callbacks kommen nicht an
-- Railway: Noch nicht deployed
+- Webhook Secret Token: vor Go-Live mit echten Mails implementieren
 
 ---
 
@@ -90,7 +89,11 @@ Nach jedem relevanten Change: python3 tests/test_translation.py
 
 Nach max. 5 Änderungen oder Session-Ende:
 docs/PROJECT_BRAIN.md, SESSION_LOG.md, TODO.md, ARCHITECTURE.md, TERMINOLOGY.md aktualisieren.
-Als ZIP mit Terminal-Command liefern.
+
+Zwei separate Lieferungen:
+- Code-Changes: ZIP + QG_REPORT.md → Downloads
+- 5MD: separater ZIP → Downloads, zusätzlich committen + pushen
+5MD gehört NICHT in den Code-ZIP.
 
 Bei cross-service Entscheidungen: CLARA_SYSTEM.md aktualisieren und Loris liefern.
 
