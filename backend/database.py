@@ -13,8 +13,10 @@ from backend.models import Base
 
 logger = logging.getLogger("bridge.db")
 
+db_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    db_url,
     echo=False,
     pool_size=5,
     max_overflow=10,

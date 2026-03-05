@@ -5,7 +5,7 @@ Shared Bot mit Clara Voice — Bridge-Messages mit Prefix "[Bridge]".
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 import httpx
 
@@ -23,7 +23,21 @@ async def setup_telegram():
     if not settings.TELEGRAM_BOT_TOKEN:
         logger.warning("TELEGRAM_BOT_TOKEN not set. Telegram disabled.")
         return
-    logger.info("Telegram service initialized.")
+
+    if not settings.WEBHOOK_URL:
+        logger.warning("WEBHOOK_URL not set. Telegram webhook not registered.")
+        return
+
+    webhook_url = f"{settings.WEBHOOK_URL}/telegram/webhook"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{TELEGRAM_API}/setWebhook",
+            json={"url": webhook_url, "allowed_updates": ["callback_query"]},
+        )
+        if response.status_code == 200 and response.json().get("ok"):
+            logger.info(f"Telegram Webhook registered: {webhook_url}")
+        else:
+            logger.error(f"Telegram Webhook registration failed: {response.text}")
 
 
 async def send_message(text: str, reply_markup: dict = None):
@@ -151,17 +165,28 @@ async def handle_callback(callback_data: str) -> dict:
     """Telegram Callback Query verarbeiten.
     Wird vom FastAPI Webhook-Endpoint aufgerufen.
     """
-    data = json.loads(callback_data)
+    try:
+        data = json.loads(callback_data)
+    except json.JSONDecodeError:
+        logger.warning(f"Invalid callback JSON: {callback_data}")
+        return {"status": "invalid_data"}
+
     action = data.get("action")
 
     if action == "approve":
+        logger.info(f"Callback: approve email_id={data.get('email_id')}")
         return await handle_approve(data["email_id"], data["draft_id"])
     elif action == "reject":
+        logger.info(f"Callback: reject email_id={data.get('email_id')}")
         return await handle_reject(data["email_id"], data["draft_id"])
     elif action == "assign":
+        logger.info(f"Callback: assign email_id={data.get('email_id')} to project_id={data.get('project_id')}")
         return await handle_assign(data["email_id"], data["project_id"])
+    elif action == "new_project":
+        logger.info(f"Callback: new_project for email_id={data.get('email_id')}")
+        return {"status": "new_project_requested", "email_id": data.get("email_id")}
     else:
-        logger.warning(f"Unknown callback action: {action}")
+        logger.warning(f"Unknown callback: {data}")
         return {"status": "unknown_action"}
 
 
@@ -179,8 +204,9 @@ async def handle_approve(email_id: int, draft_id: str) -> dict:
             await session.execute(
                 update(Email)
                 .where(Email.id == email_id)
-                .values(status=EmailStatus.SENT, sent_at=datetime.utcnow())
+                .values(status=EmailStatus.SENT, sent_at=datetime.now(timezone.utc))
             )
+            await session.commit()
         return {"status": "sent"}
     else:
         return {"status": "send_failed"}
@@ -201,6 +227,7 @@ async def handle_reject(email_id: int, draft_id: str) -> dict:
             .where(Email.id == email_id)
             .values(status=EmailStatus.REJECTED)
         )
+        await session.commit()
 
     return {"status": "rejected"}
 
@@ -215,5 +242,6 @@ async def handle_assign(email_id: int, project_id: int) -> dict:
         await session.execute(
             update(Email).where(Email.id == email_id).values(project_id=project_id)
         )
+        await session.commit()
 
     return {"status": "assigned", "project_id": project_id}

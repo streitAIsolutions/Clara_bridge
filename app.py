@@ -7,12 +7,13 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+import httpx
+from fastapi import FastAPI, Request
 
 from backend.database import init_db
 from backend.config import settings
 from backend.email_service import poll_inbox
-from backend.telegram_service import setup_telegram
+from backend.telegram_service import setup_telegram, handle_callback
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,6 +55,29 @@ app = FastAPI(
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "clara-bridge"}
+
+
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request):
+    """Telegram Callback Queries empfangen (Button-Klicks von Till)."""
+    body = await request.json()
+
+    if "callback_query" in body:
+        callback = body["callback_query"]
+        callback_data = callback.get("data", "")
+        callback_id = callback.get("id", "")
+
+        result = await handle_callback(callback_data)
+
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/answerCallbackQuery",
+                json={"callback_query_id": callback_id},
+            )
+
+        return result
+
+    return {"status": "ok"}
 
 
 @app.get("/projects")
