@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 
 import httpx
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from backend.database import init_db
 from backend.config import settings
@@ -37,6 +38,8 @@ async def lifespan(app: FastAPI):
     logger.info("Clara Bridge starting...")
     await init_db()
     await setup_telegram()
+    if not settings.TELEGRAM_WEBHOOK_SECRET:
+        logger.warning("[Bridge] SICHERHEIT: TELEGRAM_WEBHOOK_SECRET nicht gesetzt — Webhook-Endpoint ungeschützt!")
     polling_task = asyncio.create_task(polling_loop())
     logger.info("Clara Bridge ready. Polling active.")
     yield
@@ -60,6 +63,11 @@ async def health():
 @app.post("/telegram/webhook")
 async def telegram_webhook(request: Request):
     """Telegram Callback Queries empfangen (Button-Klicks von Till)."""
+    if settings.TELEGRAM_WEBHOOK_SECRET:
+        token = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+        if token != settings.TELEGRAM_WEBHOOK_SECRET:
+            return JSONResponse(status_code=403, content={"status": "forbidden"})
+
     body = await request.json()
 
     if "callback_query" in body:

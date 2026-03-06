@@ -5,7 +5,7 @@ Spaetere Phasen: requirements, supplier_offers, validations, ew_calculations
 """
 
 import enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     Column,
@@ -65,7 +65,7 @@ class Supplier(Base):
     email = Column(String(200), nullable=False)
     language = Column(String(10), default="pl")
     notes = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     projects = relationship("Project", back_populates="supplier")
 
@@ -80,8 +80,8 @@ class Project(Base):
     supplier_id = Column(Integer, ForeignKey("suppliers.id"))
     status = Column(Enum(ProjectStatus), default=ProjectStatus.RECEIVED)
     property_address = Column(String(500))
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     supplier = relationship("Supplier", back_populates="projects")
     emails = relationship("Email", back_populates="project")
@@ -106,7 +106,7 @@ class Email(Base):
     gmail_draft_id = Column(String(100))
     status = Column(Enum(EmailStatus), default=EmailStatus.RECEIVED)
     sent_at = Column(DateTime(timezone=True), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     project = relationship("Project", back_populates="emails")
 

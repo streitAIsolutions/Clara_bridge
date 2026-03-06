@@ -4,10 +4,9 @@
 
 ## Aktuelle Prioritaeten
 
-1. **Webhook Secret Token** — Telegram Webhook-Endpoint ist oeffentlich erreichbar, vor Go-Live absichern
-2. **Uebersetzungsqualitaet bewerten** — echte Kom. Kern Mails pruefen, Terminologie-Luecken finden
-3. **"Bearbeiten"-Flow** — Dritter Button neben Freigeben/Ablehnen, Implementierung klären
-4. **ANTHROPIC_MODEL verifizieren** — claude-sonnet-4-20250514 korrekt oder Update noetig?
+1. **Uebersetzungsqualitaet bewerten** — echte Kom. Kern Mails pruefen, Terminologie-Luecken finden
+2. **"Bearbeiten"-Flow** — Dritter Button neben Freigeben/Ablehnen, Implementierung klären
+3. **Attachment-Handling E2E testen** — PDFs durchreichen verifizieren
 
 ---
 
@@ -113,7 +112,7 @@
 
 | # | Bug | Status | Entdeckt |
 |---|-----|--------|----------|
-| B1 | Webhook Secret Token fehlt — Endpoint oeffentlich erreichbar | Offen | 06.03.2026 |
+| B1 | ~~Webhook Secret Token fehlt~~ | **ERLEDIGT** | 06.03.2026 |
 | B2 | "Bearbeiten"-Button fehlt in Telegram Preview (nur Freigeben/Ablehnen) | Offen | 06.03.2026 |
 
 ---

@@ -33,7 +33,11 @@ async def setup_telegram():
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{TELEGRAM_API}/setWebhook",
-            json={"url": webhook_url, "allowed_updates": ["callback_query"]},
+            json={
+                "url": webhook_url,
+                "allowed_updates": ["callback_query"],
+                "secret_token": settings.TELEGRAM_WEBHOOK_SECRET,
+            },
         )
         if response.status_code == 200 and response.json().get("ok"):
             logger.info(f"Telegram Webhook registered: {webhook_url}")
@@ -236,7 +240,6 @@ async def handle_approve(email_id: int) -> dict:
                 .where(Email.id == email_id)
                 .values(status=EmailStatus.SENT, sent_at=datetime.now(timezone.utc))
             )
-            await session.commit()
         return {"status": "sent"}
     else:
         return {"status": "send_failed"}
@@ -259,7 +262,6 @@ async def handle_reject(email_id: int) -> dict:
             .where(Email.id == email_id)
             .values(status=EmailStatus.REJECTED)
         )
-        await session.commit()
 
     return {"status": "rejected"}
 
@@ -274,6 +276,5 @@ async def handle_assign(email_id: int, project_id: int) -> dict:
         await session.execute(
             update(Email).where(Email.id == email_id).values(project_id=project_id)
         )
-        await session.commit()
 
     return {"status": "assigned", "project_id": project_id}

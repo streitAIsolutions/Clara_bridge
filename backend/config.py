@@ -32,6 +32,7 @@ class Settings:
     TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
     TELEGRAM_CHAT_ID: str = os.getenv("TELEGRAM_CHAT_ID", "")
     WEBHOOK_URL: str = os.getenv("WEBHOOK_URL", "")
+    TELEGRAM_WEBHOOK_SECRET: str = os.getenv("TELEGRAM_WEBHOOK_SECRET", "")
 
     # --- Supplier (Pilot: ekookna) ---
     SUPPLIER_EMAIL: str = os.getenv("SUPPLIER_EMAIL", "judyta.klima@ekookna.pl")

@@ -1,17 +1,16 @@
-## QG Report — Telegram Webhook + Railway Readiness — 05.03.2026
+## QG Report — QG-Verdict Fixes — 06.03.2026
 
-Änderungen (3/5):
-1. [P1.15] Telegram Webhook Endpoint in app.py, Stufe B — POST /telegram/webhook, empfängt Callback Queries, ruft handle_callback(), antwortet mit answerCallbackQuery (stoppt Tills Loading-Spinner). httpx korrekt mit async with Context Manager.
-2. [P1.15] setup_telegram() + handle_callback() in telegram_service.py, Stufe B — setup_telegram() registriert Webhook bei Telegram API via setWebhook, loggt Erfolg/Fehler explizit. handle_callback() behandelt alle 4 Fälle explizit (approve, reject, assign, new_project) mit Logging pro Aktion. Ungültiges JSON wird abgefangen, unbekannte Actions geloggt.
-3. [P1.2] Railway-Readiness, Stufe B — Dockerfile CMD nutzt ${PORT:-8000} statt hardcoded 8000. WEBHOOK_URL als neue ENV Variable in config.py. .env.example mit allen 14 ENV Variables als Referenz.
+Änderungen (2/5):
+1. Log-Warning wenn TELEGRAM_WEBHOOK_SECRET nicht gesetzt, Stufe A — logger.warning in lifespan() nach setup_telegram()
+2. DateTime timezone-Inkonsistenz in models.py, Stufe A — alle 4 Timestamp-Spalten auf DateTime(timezone=True) vereinheitlicht (Supplier.created_at, Project.created_at, Project.updated_at, Email.created_at)
 
-Vorgeschlagene Review-Tiefe: Full (Webhook ist sicherheitsrelevant — öffentlich erreichbar)
+Vorgeschlagene Review-Tiefe: Minimal
 
 Pre-Flight-Check:
-- Telegram Webhook erreichbar? Ja, Code implementiert, testbar nach Railway-Deploy
-- DB-Writes korrekt? Keine neuen DB-Writes, bestehende handle_approve/reject/assign unverändert
-- token.json nicht im Commit? Bestätigt, in .gitignore, .env.example enthält nur Platzhalter
-- ENV Variables dokumentiert? WEBHOOK_URL neu, in config.py + .env.example dokumentiert
+- Telegram Webhook erreichbar? JA — keine Änderung am Webhook-Flow
+- DB-Writes korrekt? JA — DateTime(timezone=True) konsistent über alle Tabellen
+- token.json nicht im Commit? JA
+- ENV Variables dokumentiert? Keine neuen
 
-Test-Ergebnisse: 0/0 (kein lokaler Test möglich ohne Telegram Bot Token + öffentliche URL)
-CLARA_SYSTEM.md Update nötig: Nein (kein Cross-Service Impact, Webhook-Registrierung filtert auf callback_query only — Clara Voice Messages werden nicht beeinflusst)
+Test-Ergebnisse: 0/0 (reine Typ-Anpassung + Log-Zeile)
+CLARA_SYSTEM.md Update nötig: Nein
