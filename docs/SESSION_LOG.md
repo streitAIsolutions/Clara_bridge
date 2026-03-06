@@ -8,6 +8,76 @@ Die neuesten Sessions stehen oben. Fuer Projekt-Kontext siehe PROJECT_BRAIN.md, 
 
 ## 2026
 
+### Session 06.03.2026 (Operations)
+
+**Teilnehmer:** Loris + Claude (Operations)
+
+**Ziel:** Telegram Webhook Endpoint implementieren, Railway Service aufsetzen, erster Deploy
+
+**Erreicht:**
+
+#### Telegram Webhook (P1.15)
+- POST `/telegram/webhook` Endpoint in app.py
+- `setup_telegram()` registriert Webhook bei Telegram API via `setWebhook`
+- `handle_callback()` behandelt alle 4 Faelle explizit (approve, reject, assign, new_project) mit Logging
+- Ungueltige JSON-Payloads und unbekannte Actions werden geloggt
+- `answerCallbackQuery` stoppt Tills Loading-Spinner
+
+#### Railway Deploy (P1.2, P1.3)
+- Railway Projekt "Clara-Bridge" angelegt
+- PostgreSQL DB-Instanz aufgesetzt (eigene DB)
+- App-Service "Clara-Bridge" mit GitHub Repo verknuepft
+- Alle 14 ENV Variables gesetzt (GMAIL_TOKEN_JSON als JSON-String, nicht Datei)
+- Dockerfile CMD: `${PORT:-8000}` statt hardcoded 8000
+- DATABASE_URL asyncpg-Driver Fix (`postgresql://` → `postgresql+asyncpg://`)
+- Railway Domain: `https://clara-bridge-production.up.railway.app`
+
+#### Deploy-Checks (alle gruen)
+- `/health` → `{"status":"ok","service":"clara-bridge"}` ✅
+- DB: `Database initialized.` in Logs ✅
+- Telegram: `Telegram Webhook registered: https://clara-bridge-production.up.railway.app/telegram/webhook` ✅
+- Gmail Polling: Aktiv, hat 2 Mails erkannt ✅
+
+#### QG-Review Findings (von Loris)
+- Blocker 1: `session.commit()` fehlte in handle_approve/reject/assign — gefixt
+- Blocker 2: `datetime.utcnow()` → `datetime.now(timezone.utc)` — gefixt
+- httpx ohne Context Manager in app.py — gefixt (`async with`)
+- Import httpx an Dateianfang statt inline — gefixt
+
+#### E2E-Tests (4 Durchlaeufe)
+- Test 1: Flow OK bis Telegram — HTML-Parse-Error (E-Mail-Adresse als HTML-Tag interpretiert)
+- Test 2: HTML-Fix OK — callback_data > 64 bytes (Telegram-Limit)
+- Test 3: callback_data Fix OK — Draft gesendet, aber DB-Error (offset-naive vs offset-aware datetime) + Doppelklick sendete Draft 2x
+- **Test 4: Kompletter Happy Path bestanden** ✅
+  - Mail erkannt → Projekt zugeordnet → Uebersetzung → Draft → Telegram-Preview → Approve-Klick → Draft gesendet → DB-Update SENT → Doppelklick abgefangen
+
+#### Bug-Fixes (Stufe A, live entdeckt)
+- HTML-Escaping: `html.escape()` auf alle User-Daten in Telegram-Messages
+- callback_data: Kurze Keys (a/e/p), draft_id aus DB statt in Button-Payload
+- sent_at Column: `DateTime(timezone=True)` + ALTER TABLE auf Railway-DB
+- Idempotenz-Guard: handle_approve prueft ob Email bereits SENT
+
+#### Sonstiges
+- `.env.example` mit allen 14 ENV Variables als Referenz angelegt
+- `WEBHOOK_URL` als neue ENV Variable in config.py
+- `docs/QG_CHECKLIST.md` angelegt (Bridge-spezifische Review-Checkliste)
+- CLAUDE.md aktualisiert (Railway live, Blocker resolved, 5MD Workflow)
+
+**Noch offen nach Session:**
+- Webhook Secret Token (Sicherheit — Endpoint ist oeffentlich erreichbar)
+- ANTHROPIC_MODEL String verifizieren (claude-sonnet-4-20250514 korrekt?)
+- Uebersetzungsqualitaet mit echten Kom. Kern Mails bewerten
+- "Bearbeiten"-Flow fehlt (nur Freigeben/Ablehnen implementiert)
+
+**HANDOFF — NAECHSTE SESSION:**
+- Ziel: Uebersetzungsqualitaet bewerten, Webhook Secret Token, "Bearbeiten"-Flow
+- Dateien benoetigt: backend/telegram_service.py, app.py
+- Offene Entscheidungen: Wie soll "Bearbeiten" funktionieren? (Telegram-Reply? Separater Draft-Edit-Link?)
+- Autonomie-Stufe: B (Webhook Secret), C (Bearbeiten-Flow = neues Feature)
+- CLARA_SYSTEM.md: Update noetig wenn Webhook Secret implementiert (shared Bot betroffen)
+
+---
+
 ### Session 03.03.2026-B (Operations)
 
 **Teilnehmer:** Loris + Claude (Operations)

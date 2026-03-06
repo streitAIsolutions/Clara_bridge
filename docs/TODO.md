@@ -4,58 +4,58 @@
 
 ## Aktuelle Prioritaeten
 
-1. **Railway Service aufsetzen** — eigener Service, ENV Variables (Token, Anthropic Key, Telegram, DB)
-2. **Telegram Webhook-Endpoint** — /telegram/webhook fehlt in app.py (Callback-Handling nicht erreichbar)
-3. **Erster E2E-Test** — Polling + Übersetzung mit echter Kom. Kern Mail
-4. **Telegram Integration vervollständigen** — Freigabe-Buttons → Draft senden
+1. **Webhook Secret Token** — Telegram Webhook-Endpoint ist oeffentlich erreichbar, vor Go-Live absichern
+2. **Uebersetzungsqualitaet bewerten** — echte Kom. Kern Mails pruefen, Terminologie-Luecken finden
+3. **"Bearbeiten"-Flow** — Dritter Button neben Freigeben/Ablehnen, Implementierung klären
+4. **ANTHROPIC_MODEL verifizieren** — claude-sonnet-4-20250514 korrekt oder Update noetig?
 
 ---
 
-## Phase 1: E-Mail Relay + Uebersetzung (IN ARBEIT)
+## Phase 1: E-Mail Relay + Uebersetzung (LIVE)
 
 ### 1A: Setup & Infrastruktur
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
 | P1.1 | GitHub Repo anlegen + Grundstruktur (27 Dateien) | **ERLEDIGT** | Hoch |
-| P1.2 | Railway Service aufsetzen (eigener Container) | **Offen** | Hoch |
-| P1.3 | PostgreSQL DB aufsetzen (eigene DB) + Basis-Tabellen | **Offen** | Hoch |
+| P1.2 | Railway Service aufsetzen (eigener Container) | **ERLEDIGT** | Hoch |
+| P1.3 | PostgreSQL DB aufsetzen (eigene DB) + Basis-Tabellen | **ERLEDIGT** | Hoch |
 
 ### 1B: Gmail Integration
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
 | P1.4 | Gmail OAuth Credentials prüfen/einrichten | **ERLEDIGT** | Hoch |
-| P1.5 | Gmail Inbound: Polling alle 5 Min (neue Mails erkennen) | **Im Code** | Hoch |
-| P1.6 | Gmail Outbound: Draft erstellen + senden nach Freigabe | **Im Code** | Hoch |
-| P1.7 | Thread-Erkennung: Gmail Thread-ID + Subject-Parsing Fallback | **Im Code** | Hoch |
+| P1.5 | Gmail Inbound: Polling alle 5 Min (neue Mails erkennen) | **LIVE** | Hoch |
+| P1.6 | Gmail Outbound: Draft erstellen + senden nach Freigabe | **LIVE** | Hoch |
+| P1.7 | Thread-Erkennung: Gmail Thread-ID + Subject-Parsing Fallback | **LIVE** | Hoch |
 | P1.8 | Attachment-Handling: Durchreichen (PDFs etc.) | **Im Code** | Hoch |
 
 ### 1C: Uebersetzung
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.9 | Uebersetzungs-Engine DE→PL (Claude Sonnet + TERMINOLOGY.md) | **Im Code** | Hoch |
-| P1.10 | Uebersetzungs-Engine PL→DE (Claude Sonnet + TERMINOLOGY.md) | **Im Code** | Hoch |
-| P1.11 | Spracherkennung (DE vs PL) | **Im Code** | Mittel |
-| P1.12 | Low-Confidence Markierung bei unbekannten Begriffen | **Im Code** | Mittel |
+| P1.9 | Uebersetzungs-Engine DE→PL (Claude Sonnet + TERMINOLOGY.md) | **LIVE** | Hoch |
+| P1.10 | Uebersetzungs-Engine PL→DE (Claude Sonnet + TERMINOLOGY.md) | **LIVE** | Hoch |
+| P1.11 | Spracherkennung (DE vs PL) | **LIVE** | Mittel |
+| P1.12 | Low-Confidence Markierung bei unbekannten Begriffen | **LIVE** | Mittel |
 
 ### 1D: Telegram Human-in-the-Loop
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.13 | Telegram: Notification bei neuer Inbound-Mail | **Im Code** | Hoch |
-| P1.14 | Telegram: Uebersetzungs-Preview + Inline Keyboard (Freigeben/Bearbeiten/Ablehnen) | **Im Code** | Hoch |
-| P1.15 | Telegram: Callback-Handling — **/telegram/webhook Endpoint fehlt in app.py** | **OFFEN** | Hoch |
+| P1.13 | Telegram: Notification bei neuer Inbound-Mail | **LIVE** | Hoch |
+| P1.14 | Telegram: Uebersetzungs-Preview + Inline Keyboard (Freigeben/Ablehnen) | **LIVE** | Hoch |
+| P1.15 | Telegram: Callback-Handling — /telegram/webhook Endpoint | **LIVE** | Hoch |
 | P1.16 | Telegram: Manuelle Projekt-Zuordnung (Fallback) | **Im Code** | Mittel |
 
 ### 1E: Projekt-Management
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.17 | Projekt-Anlage bei neuer Anfrage (automatisch + manuell) | **Im Code** | Mittel |
-| P1.18 | Basis-Status-Tracking pro Projekt | **Im Code** | Mittel |
-| P1.19 | E-Mail-Status-Tracking (RECEIVED→DRAFT→APPROVED→SENT) | **Im Code** | Hoch |
+| P1.17 | Projekt-Anlage bei neuer Anfrage (automatisch + manuell) | **LIVE** | Mittel |
+| P1.18 | Basis-Status-Tracking pro Projekt | **LIVE** | Mittel |
+| P1.19 | E-Mail-Status-Tracking (RECEIVED→DRAFT→APPROVED→SENT) | **LIVE** | Hoch |
 
 ### 1F: Testing
 | # | Aufgabe | Status | Prio |
 |---|---------|--------|------|
-| P1.20 | End-to-End Test: Inbound Mail → Uebersetzung → Draft → Freigabe → Send | **Offen** | Hoch |
+| P1.20 | End-to-End Test: Inbound Mail → Uebersetzung → Draft → Freigabe → Send | **ERLEDIGT** (4 Durchlaeufe, Happy Path bestanden) | Hoch |
 | P1.21 | Uebersetzungsqualitaet testen mit Kom. Kern Korrespondenz | **Offen** | Hoch |
 
 ---
@@ -111,7 +111,10 @@
 
 ## Offene Bugs
 
-Noch keine (Projekt in Konzeptphase).
+| # | Bug | Status | Entdeckt |
+|---|-----|--------|----------|
+| B1 | Webhook Secret Token fehlt — Endpoint oeffentlich erreichbar | Offen | 06.03.2026 |
+| B2 | "Bearbeiten"-Button fehlt in Telegram Preview (nur Freigeben/Ablehnen) | Offen | 06.03.2026 |
 
 ---
 
@@ -125,6 +128,7 @@ Noch keine (Projekt in Konzeptphase).
 | T4 | Zeichnungen: Raster vs. Vektor | Abhaengig von Architekten-PDF | Offen (Phase 2) |
 | T5 | Draft-Freigabe Mechanismus | Telegram Inline Keyboard | **Entschieden** |
 | T6 | E-Mail-Routing Phase 1 | Alles ueber E&W, Direktmodus spaeter | **Entschieden** |
+| T7 | callback_data Format | Kurze Keys (a/e/p), draft_id aus DB | **Entschieden: 64-byte Limit** |
 
 ---
 
@@ -132,6 +136,10 @@ Noch keine (Projekt in Konzeptphase).
 
 | # | Item | Datum |
 |---|------|-------|
+| P1.2 | Railway Service aufgesetzt + deployed | 06.03.2026 |
+| P1.3 | PostgreSQL DB live auf Railway | 06.03.2026 |
+| P1.15 | Telegram Webhook Endpoint implementiert | 06.03.2026 |
+| P1.20 | E2E-Test bestanden (4 Durchlaeufe) | 06.03.2026 |
 | Konzept | CLARA_BRIDGE_CONCEPT.md erstellt und freigegeben | 03.03.2026 |
 | 5MD | Dokumentationsstruktur aufgesetzt | 03.03.2026 |
 | Flow | Phase 1 Flow-Diagramm (4 Flows, interaktiv) | 03.03.2026 |

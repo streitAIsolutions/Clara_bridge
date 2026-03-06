@@ -6,14 +6,17 @@
 2. **Lies SESSION_LOG.md** (letzte 2-3 Sessions) - Verstehe wo wir stehen
 3. **Lies TODO.md** - Verstehe was ansteht
 
-**Aktueller Stand (05.03.2026):**
-- **Phase 1 Code implementiert** — Grundstruktur vollstaendig (27 Dateien, 2 Commits)
+**Aktueller Stand (06.03.2026):**
+- **Phase 1 deployed** — Service live auf Railway
+- **Railway URL:** `https://clara-bridge-production.up.railway.app`
 - **Repo live:** `streitAIsolutions/Clara_bridge` auf GitHub
-- **Gmail OAuth:** Token generiert fuer `frank.eulen.weischer@gmail.com`, in .gitignore gesichert
+- **Gmail OAuth:** Token als ENV Variable auf Railway, Polling aktiv
 - **Google Cloud:** Gmail API aktiviert, OAuth konfiguriert
-- **Railway:** Noch nicht aufgesetzt (naechste Session)
-- **Noch offen:** Telegram Webhook-Endpoint in app.py fehlt, kein E2E-Test, kein Deploy
-- **Naechster Schritt:** Railway Service aufsetzen, ENV Variables setzen, erster E2E-Test (Polling + Uebersetzung mit echter Kom. Kern Mail)
+- **Railway:** Service + PostgreSQL live, alle 14 ENV Variables gesetzt ✅
+- **Telegram Webhook:** Registriert und aktiv ✅
+- **E2E-Test:** Bestanden (4 Durchlaeufe, Happy Path komplett) ✅
+- **Noch offen:** Webhook Secret Token (Sicherheit), ANTHROPIC_MODEL String verifizieren
+- **Naechster Schritt:** Uebersetzungsqualitaet bewerten, Webhook Secret Token, "Bearbeiten"-Flow
 
 **Entscheidungen Phase 1 (03.03.2026):**
 - E-Mail-Routing: Alles ueber E&W (Direktmodus spaeter als Feature-Flag)
@@ -38,7 +41,7 @@ KI-gestuetzter Beschaffungsassistent fuer Handwerksbetriebe. Automatisiert den A
 | Modul | Funktion | Status | Projekt |
 |-------|----------|--------|---------|
 | Clara Voice | KI-Telefonassistent | Live (Frank) | Eigenes Claude-Projekt |
-| **Clara Bridge** | **KI-Beschaffungsassistent** | **Phase 1 in Entwicklung** | **Dieses Projekt** |
+| **Clara Bridge** | **KI-Beschaffungsassistent** | **Phase 1 deployed** | **Dieses Projekt** |
 
 ---
 
@@ -61,7 +64,7 @@ KI-gestuetzter Beschaffungsassistent fuer Handwerksbetriebe. Automatisiert den A
 
 | Phase | Inhalt | Status | Abhaengigkeiten |
 |-------|--------|--------|-----------------|
-| 1 | E-Mail Relay + Uebersetzung DE↔PL | **IN ENTWICKLUNG** | Gmail API ✅, Repo ✅, Railway offen |
+| 1 | E-Mail Relay + Uebersetzung DE↔PL | **DEPLOYED** | Gmail API ✅, Repo ✅, Railway ✅ |
 | 2 | PDF-Parsing + Anforderungs-Extraktion | Geplant | Phase 1, Beispiel-PDFs |
 | 3 | Angebotsvalidierung (Quality Gate) | Geplant | Phase 2, ekookna Angebots-PDF |
 | 4 | Kalkulation + E&W-Angebot | Geplant | Phase 3, E&W Kalkulationsregeln |
@@ -102,8 +105,11 @@ Details zu jeder Phase: Siehe ARCHITECTURE.md Sektion 5.
 
 ## Arbeitsstruktur
 
-### Einzelchat (vorerst)
-Clara Bridge startet mit einem einzelnen Chat (Operations + QG kombiniert). Bei steigender Komplexitaet auf 2-Chat-System splitten (wie bei Clara Voice).
+### 2-Chat-System (aktiv ab 05.03.2026)
+- **OP (Operations):** Claude Code im Terminal — implementiert, liefert ZIP + QG_REPORT.md
+- **QG (Quality Gate):** Separater Chat im Bridge-Projektordner — nur Review, kein Implementieren
+- **Loris:** Bindeglied zwischen OP und QG
+- Max. 5 Aenderungen pro OP-Session, dann QG-Pflicht
 
 ### Dokumentations-System (5MD)
 - **PROJECT_BRAIN.md** ← DIESE DATEI (Status, Kontext, Beteiligte)
@@ -134,6 +140,13 @@ Clara Bridge startet mit einem einzelnen Chat (Operations + QG kombiniert). Bei 
 ---
 
 ## Changelog
+
+### 06.03.2026
+- Phase 1 deployed auf Railway
+- Telegram Webhook Endpoint implementiert + registriert
+- Railway Service + PostgreSQL + 14 ENV Variables aufgesetzt
+- DATABASE_URL asyncpg-Driver Fix
+- Alle 4 Checks gruen: /health, DB, Webhook, Gmail Polling
 
 ### 05.03.2026
 - 5MD auf aktuellen Code-Stand gebracht (war veraltet)
