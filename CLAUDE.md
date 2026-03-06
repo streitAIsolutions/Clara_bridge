@@ -57,6 +57,21 @@ CLARA_SYSTEM.md Update nötig: Ja/Nein + was
 
 ---
 
+## QG ZIP Workflow
+
+Nach jeder Session (oder bei 5/5 Änderungen) liefert OP einen ZIP in Downloads mit:
+- QG_REPORT.md
+- Alle geänderten Code-Dateien
+
+ZIP-Name zeigt Review-Tiefe:
+- clara_bridge_qg_full.zip → Full Review
+- clara_bridge_qg_light.zip → Light Review
+- clara_bridge_qg_minimal.zip → Minimal Review
+
+Loris legt den ZIP direkt im QG-Chat ab. Kein manuelles Sortieren, kein Human Error.
+
+---
+
 ## Autonomie-Stufen
 
 **Stufe A — Direkt umsetzen (kein QG):**
