@@ -78,10 +78,12 @@ Nach jedem relevanten Change: python3 tests/test_translation.py
 
 ---
 
-## Aktive Blocker
+## Aktive Blocker + Auflagen nächste Session
 
-- token.json: In .gitignore — niemals committen. Für Railway als ENV Variable (JSON-String)
 - Webhook Secret Token: vor Go-Live mit echten Mails implementieren
+- datetime.utcnow in models.py ersetzen durch datetime.now(timezone.utc)
+- double-commit vereinheitlichen: entweder auto-commit in get_session() ODER explizit in Handlern, nicht beides
+- QG_CHECKLIST.md: P4A Verglasung in TERMINOLOGY.md ergänzen
 
 ---
 

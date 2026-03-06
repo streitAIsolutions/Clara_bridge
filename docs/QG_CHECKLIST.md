@@ -48,3 +48,5 @@
 | httpx ohne Context Manager | Resource-Leak auf Railway | QG Review 05.03.2026 |
 | Webhook ohne Secret Token | Öffentlicher Endpoint ohne Auth — vor Go-Live fixen | QG Auflage 05.03.2026 |
 | import mitten in Funktion | Imports gehören an Dateianfang | QG Review 05.03.2026 |
+| callback_data > 64 bytes | Telegram-Limit: kurze Keys (a/e/p) verwenden, draft_id aus DB holen statt in Button-Payload | E2E Test 06.03.2026 |
+| HTML in Telegram-Messages | User-Daten (E-Mail-Adressen, Projektnamen) mit html_escape() wrappen — sonst 400 Bad Request | E2E Test 06.03.2026 |
