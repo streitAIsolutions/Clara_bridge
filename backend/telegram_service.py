@@ -207,9 +207,22 @@ async def handle_approve(email_id: int) -> dict:
     from backend.email_service import send_draft
     from backend.database import get_session
     from backend.models import Email, EmailStatus
-    from sqlalchemy import update
+    from sqlalchemy import select, update
 
-    draft_id = await _get_draft_id(email_id)
+    # Idempotenz: bereits gesendete Drafts nicht nochmal senden
+    async with get_session() as session:
+        result = await session.execute(
+            select(Email.status, Email.gmail_draft_id).where(Email.id == email_id)
+        )
+        row = result.one_or_none()
+        if not row:
+            logger.error(f"No email found for email_id={email_id}")
+            return {"status": "not_found"}
+        if row.status == EmailStatus.SENT:
+            logger.info(f"Email {email_id} already sent, skipping")
+            return {"status": "already_sent"}
+        draft_id = row.gmail_draft_id
+
     if not draft_id:
         logger.error(f"No draft_id found for email_id={email_id}")
         return {"status": "no_draft"}

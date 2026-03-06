@@ -105,7 +105,7 @@ class Email(Base):
     gmail_message_id = Column(String(100), unique=True)
     gmail_draft_id = Column(String(100))
     status = Column(Enum(EmailStatus), default=EmailStatus.RECEIVED)
-    sent_at = Column(DateTime)
+    sent_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     project = relationship("Project", back_populates="emails")
