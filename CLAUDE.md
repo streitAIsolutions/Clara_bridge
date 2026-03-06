@@ -132,14 +132,33 @@ Wenn nicht geändert: clara_bridge_pk.zip
 
 ## Session-Ende Pflicht
 
-- [ ] CLAUDE.md selbst aktuell? Status, Blocker, Auflagen — vor dem letzten Commit prüfen und ggf. anpassen
+Session endet bei einem von zwei Triggern:
+1. 5/5 Änderungen erreicht → STOPP, QG ZIP liefern, auf Verdict warten
+2. Session-Ziel erreicht → Session-Ende einleiten
 
-HANDOFF — NÄCHSTE SESSION:
+Reihenfolge ist fix:
+
+**Schritt 1 — QG ZIP liefern (immer):**
+- clara_bridge_qg_full/light/minimal.zip
+- Enthält: QG_REPORT.md + alle geänderten Code-Dateien
+- Warten auf QG Verdict
+
+**Schritt 2 — Erst nach APPROVED:**
+- Bei REJECTED oder BEDINGT APPROVED: fixen, neuen QG ZIP liefern
+- Bei APPROVED: weiter mit Schritt 3
+
+**Schritt 3 — PK ZIP liefern (nur wenn 5MD geändert):**
+- clara_bridge_pk.zip ODER clara_bridge_pk_SYNC_CLARA_SYSTEM.zip
+- Enthält alle 7 PK-Dateien (auch unveränderte)
+
+**Schritt 4 — Handoff-Block (immer):**
 - Ziel: [Was als nächstes]
 - Dateien benötigt: [Welche Files]
 - Offene Entscheidungen: [Was Loris klären muss]
 - Autonomie-Stufe: [A/B/C]
 - CLARA_SYSTEM.md: [Update nötig? Ja/Nein + was]
+
+Der Handoff-Block ist das klare Signal: Session durch.
 
 ---
 
