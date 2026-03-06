@@ -32,6 +32,7 @@
 | Verbundsicherheitsglas (VSG) | Szklo bezpieczne klejone (VSG) | Innen, aussen oder beidseitig |
 | Einscheibensicherheitsglas (ESG) | Szklo bezpieczne hartowane (ESG) | Thermisch gehaertet |
 | Warme Kante | Ciepla ramka dystansowa | Abstandhalter in Isolierverglasung |
+| Verglasung P4A | Szklenie P4A | Durchwurfhemmende Verglasung Klasse P4A — Bezeichnung unveraendert in beiden Sprachen |
 
 ---
 
@@ -140,4 +141,5 @@
 
 | Datum | Aenderung |
 |-------|-----------|
+| 06.03.2026 | v2: P4A Verglasung ergaenzt (durchwurfhemmend, Bezeichnung unveraendert DE/PL) |
 | 03.03.2026 | v1: Initiale Liste aus Korrespondenz E&W / ekookna (Kom. Kern) extrahiert |
