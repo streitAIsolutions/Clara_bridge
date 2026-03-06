@@ -20,6 +20,11 @@ Clara Bridge ist ein KI-gestützter Beschaffungsassistent für Handwerksbetriebe
 2. Lies docs/SESSION_LOG.md (letzte 2 Sessions)
 3. Lies docs/TODO.md
 4. Prüfe docs/CLARA_SYSTEM.md auf cross-service Einträge
+5. Gib Loris einen strukturierten Überblick:
+   - Offene Bugs (aus TODO.md)
+   - Auflagen aus letztem QG-Verdict (aus CLAUDE.md Aktive Blocker)
+   - Nächste Tasks (aus TODO.md Aktuelle Prioritäten)
+   Loris entscheidet dann was diese Session angegangen wird.
 
 ---
 
