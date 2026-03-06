@@ -102,20 +102,17 @@ async def send_translation_preview(
 {confidence_warning}
 ⏳ Warte auf Freigabe..."""
 
+    # callback_data max 64 bytes — nur email_id, draft_id aus DB holen
     reply_markup = {
         "inline_keyboard": [
             [
                 {
                     "text": "✅ Freigeben",
-                    "callback_data": json.dumps(
-                        {"action": "approve", "email_id": email_id, "draft_id": draft_id}
-                    ),
+                    "callback_data": f'{{"a":"approve","e":{email_id}}}',
                 },
                 {
                     "text": "❌ Ablehnen",
-                    "callback_data": json.dumps(
-                        {"action": "reject", "email_id": email_id, "draft_id": draft_id}
-                    ),
+                    "callback_data": f'{{"a":"reject","e":{email_id}}}',
                 },
             ]
         ]
@@ -149,13 +146,11 @@ Welchem Projekt zuordnen?"""
     for p in projects[:4]:
         buttons.append([{
             "text": p.name[:40],
-            "callback_data": json.dumps(
-                {"action": "assign", "email_id": email_id, "project_id": p.id}
-            ),
+            "callback_data": f'{{"a":"assign","e":{email_id},"p":{p.id}}}',
         }])
     buttons.append([{
         "text": "➕ Neues Projekt",
-        "callback_data": json.dumps({"action": "new_project", "email_id": email_id}),
+        "callback_data": f'{{"a":"new_project","e":{email_id}}}',
     }])
 
     reply_markup = {"inline_keyboard": buttons}
@@ -172,31 +167,52 @@ async def handle_callback(callback_data: str) -> dict:
         logger.warning(f"Invalid callback JSON: {callback_data}")
         return {"status": "invalid_data"}
 
-    action = data.get("action")
+    # Kurze Keys: a=action, e=email_id, p=project_id
+    action = data.get("a") or data.get("action")
+    email_id = data.get("e") or data.get("email_id")
 
     if action == "approve":
-        logger.info(f"Callback: approve email_id={data.get('email_id')}")
-        return await handle_approve(data["email_id"], data["draft_id"])
+        logger.info(f"Callback: approve email_id={email_id}")
+        return await handle_approve(email_id)
     elif action == "reject":
-        logger.info(f"Callback: reject email_id={data.get('email_id')}")
-        return await handle_reject(data["email_id"], data["draft_id"])
+        logger.info(f"Callback: reject email_id={email_id}")
+        return await handle_reject(email_id)
     elif action == "assign":
-        logger.info(f"Callback: assign email_id={data.get('email_id')} to project_id={data.get('project_id')}")
-        return await handle_assign(data["email_id"], data["project_id"])
+        project_id = data.get("p") or data.get("project_id")
+        logger.info(f"Callback: assign email_id={email_id} to project_id={project_id}")
+        return await handle_assign(email_id, project_id)
     elif action == "new_project":
-        logger.info(f"Callback: new_project for email_id={data.get('email_id')}")
-        return {"status": "new_project_requested", "email_id": data.get("email_id")}
+        logger.info(f"Callback: new_project for email_id={email_id}")
+        return {"status": "new_project_requested", "email_id": email_id}
     else:
         logger.warning(f"Unknown callback: {data}")
         return {"status": "unknown_action"}
 
 
-async def handle_approve(email_id: int, draft_id: str) -> dict:
+async def _get_draft_id(email_id: int) -> str | None:
+    """Draft-ID aus DB holen (statt in callback_data zu speichern)."""
+    from backend.database import get_session
+    from backend.models import Email
+    from sqlalchemy import select
+
+    async with get_session() as session:
+        result = await session.execute(
+            select(Email.gmail_draft_id).where(Email.id == email_id)
+        )
+        return result.scalar_one_or_none()
+
+
+async def handle_approve(email_id: int) -> dict:
     """Draft freigeben und senden."""
     from backend.email_service import send_draft
     from backend.database import get_session
     from backend.models import Email, EmailStatus
     from sqlalchemy import update
+
+    draft_id = await _get_draft_id(email_id)
+    if not draft_id:
+        logger.error(f"No draft_id found for email_id={email_id}")
+        return {"status": "no_draft"}
 
     success = await send_draft(draft_id)
 
@@ -213,14 +229,16 @@ async def handle_approve(email_id: int, draft_id: str) -> dict:
         return {"status": "send_failed"}
 
 
-async def handle_reject(email_id: int, draft_id: str) -> dict:
+async def handle_reject(email_id: int) -> dict:
     """Draft ablehnen und loeschen."""
     from backend.email_service import delete_draft
     from backend.database import get_session
     from backend.models import Email, EmailStatus
     from sqlalchemy import update
 
-    await delete_draft(draft_id)
+    draft_id = await _get_draft_id(email_id)
+    if draft_id:
+        await delete_draft(draft_id)
 
     async with get_session() as session:
         await session.execute(
