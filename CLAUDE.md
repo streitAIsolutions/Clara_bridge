@@ -89,19 +89,30 @@ Nach jedem relevanten Change: python3 tests/test_translation.py
 
 ## 5MD Pflege
 
-Nach max. 5 Änderungen oder Session-Ende:
-docs/PROJECT_BRAIN.md, SESSION_LOG.md, TODO.md, ARCHITECTURE.md, TERMINOLOGY.md aktualisieren.
+OP hält alle MDs immer aktuell im Repo (committen + pushen nach jeder Änderung).
 
-Zwei separate Lieferungen:
-- Code-Changes: ZIP + QG_REPORT.md → Downloads
-- 5MD: separater ZIP → Downloads, zusätzlich committen + pushen
-5MD gehört NICHT in den Code-ZIP.
+Wenn Loris die PK aktualisieren muss, liefert OP einen ZIP mit ALLEN PK-Dateien:
+- docs/PROJECT_BRAIN.md
+- docs/SESSION_LOG.md
+- docs/TODO.md
+- docs/ARCHITECTURE.md
+- docs/TERMINOLOGY.md
+- docs/QG_CHECKLIST.md
+- docs/CLARA_SYSTEM.md
 
-Bei cross-service Entscheidungen: CLARA_SYSTEM.md aktualisieren und Loris liefern.
+Loris löscht alle bestehenden PK-Dateien und lädt den kompletten Block neu rein.
+CLAUDE.md gehört NICHT in den ZIP — bleibt im Repo-Root für OP.
+
+SONDERFALL CLARA_SYSTEM.md: Wenn sie geändert wurde, ZIP-Name mit Flag:
+clara_bridge_pk_SYNC_CLARA_SYSTEM.zip
+→ Loris muss sie dann in BEIDE PKs laden (Bridge + Voice).
+Wenn nicht geändert: clara_bridge_pk.zip
 
 ---
 
 ## Session-Ende Pflicht
+
+- [ ] CLAUDE.md selbst aktuell? Status, Blocker, Auflagen — vor dem letzten Commit prüfen und ggf. anpassen
 
 HANDOFF — NÄCHSTE SESSION:
 - Ziel: [Was als nächstes]

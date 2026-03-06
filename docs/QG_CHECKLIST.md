@@ -9,6 +9,8 @@
 - [ ] Status-Zeile aktuell (Railway URL, Phase)?
 - [ ] Aktive Blocker aktuell (erledigte entfernt)?
 - [ ] 5MD Workflow korrekt dokumentiert?
+- [ ] CLARA_SYSTEM.md in docs/ aktuell?
+- [ ] Wenn CLARA_SYSTEM.md geändert: ZIP-Flag gesetzt (SYNC_CLARA_SYSTEM)?
 
 ## 2. Code-Review
 
