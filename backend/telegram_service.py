@@ -6,6 +6,7 @@ Shared Bot mit Clara Voice — Bridge-Messages mit Prefix "[Bridge]".
 import json
 import logging
 from datetime import datetime, timezone
+from html import escape as html_escape
 
 import httpx
 
@@ -89,15 +90,15 @@ async def send_translation_preview(
 
     text = f"""🌉 <b>[Bridge] Neue Uebersetzung</b>
 
-📁 <b>Projekt:</b> {project_name}
-📧 <b>Von:</b> {from_addr}
-📋 <b>Betreff:</b> {subject}
+📁 <b>Projekt:</b> {html_escape(project_name)}
+📧 <b>Von:</b> {html_escape(from_addr)}
+📋 <b>Betreff:</b> {html_escape(subject)}
 
 📝 <b>Original:</b>
-<i>{original_preview}</i>
+<i>{html_escape(original_preview)}</i>
 
 🔄 <b>Uebersetzung:</b>
-{translated_preview}
+{html_escape(translated_preview)}
 {confidence_warning}
 ⏳ Warte auf Freigabe..."""
 
