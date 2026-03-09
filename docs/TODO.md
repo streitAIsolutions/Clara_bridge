@@ -114,6 +114,7 @@
 |---|-----|--------|----------|
 | B1 | ~~Webhook Secret Token fehlt~~ | **ERLEDIGT** | 06.03.2026 |
 | B2 | "Bearbeiten"-Button fehlt in Telegram Preview (nur Freigeben/Ablehnen) | Offen | 06.03.2026 |
+| B3 | ~~DateTime timezone-Inkonsistenz in models.py~~ | **ERLEDIGT** | 06.03.2026 |
 
 ---
 
@@ -139,6 +140,8 @@
 | P1.3 | PostgreSQL DB live auf Railway | 06.03.2026 |
 | P1.15 | Telegram Webhook Endpoint implementiert | 06.03.2026 |
 | P1.20 | E2E-Test bestanden (4 Durchlaeufe) | 06.03.2026 |
+| B1 | Webhook Secret Token implementiert | 06.03.2026 |
+| B3 | DateTime timezone=True konsistent + ALTER TABLE | 06.03.2026 |
 | Konzept | CLARA_BRIDGE_CONCEPT.md erstellt und freigegeben | 03.03.2026 |
 | 5MD | Dokumentationsstruktur aufgesetzt | 03.03.2026 |
 | Flow | Phase 1 Flow-Diagramm (4 Flows, interaktiv) | 03.03.2026 |

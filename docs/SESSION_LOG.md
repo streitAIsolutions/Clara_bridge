@@ -8,6 +8,31 @@ Die neuesten Sessions stehen oben. Fuer Projekt-Kontext siehe PROJECT_BRAIN.md, 
 
 ## 2026
 
+### Session 06.03.2026-B (Operations — QG-Verdict Fixes)
+
+**Teilnehmer:** Loris + Claude (Operations)
+
+**Ziel:** QG-Auflagen aus Session 06.03.2026 umsetzen
+
+**Erreicht:**
+- Webhook Secret Token: Validierung in `/telegram/webhook` + `setup_telegram()` sendet `secret_token` an Telegram API
+- Log-Warning in lifespan() wenn `TELEGRAM_WEBHOOK_SECRET` nicht gesetzt
+- `DateTime(timezone=True)` auf alle 4 Timestamp-Spalten vereinheitlicht (Supplier.created_at, Project.created_at, Project.updated_at, Email.created_at)
+- ALTER TABLE auf Railway-DB ausgefuehrt (alle 4 Spalten → TIMESTAMPTZ)
+- Explizite `session.commit()` aus Handlern entfernt (auto-commit in get_session())
+- CLAUDE.md Blocker-Sektion bereinigt, TODO.md aktualisiert, .env.example ergaenzt
+
+**Commit:** `03c3386` — Fix: DateTime timezone=True konsistent, Webhook Secret Token, QG-Auflagen
+
+**HANDOFF — NAECHSTE SESSION:**
+- Ziel: Uebersetzungsqualitaet bewerten (P1.21), "Bearbeiten"-Flow Design, Attachment-Handling E2E
+- Dateien benoetigt: backend/translation_service.py, backend/telegram_service.py, docs/TERMINOLOGY.md
+- Offene Entscheidungen: Wie soll "Bearbeiten" funktionieren? (Telegram-Reply? Separater Draft-Edit-Link?)
+- Autonomie-Stufe: B (Uebersetzungsqualitaet), C (Bearbeiten-Flow = neues Feature)
+- CLARA_SYSTEM.md: Kein Update noetig
+
+---
+
 ### Session 06.03.2026 (Operations)
 
 **Teilnehmer:** Loris + Claude (Operations)
