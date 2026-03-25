@@ -2,7 +2,7 @@
 
 **Zweck:** Technische Referenz fuer Clara Bridge. Beschreibt das System als Ganzes, Datenmodell, Entscheidungen und Constraints. Ergaenzt die 3MD (PROJECT_BRAIN.md = Status, SESSION_LOG.md = Chronik, TODO.md = Aufgaben).
 
-**Letztes Update:** 3. Maerz 2026 (v2 - Phase 1 Entscheidungen ergaenzt)
+**Letztes Update:** 25. Maerz 2026 (v3 - Betriebswissen/Migrations-Workflow ergaenzt)
 
 ---
 
@@ -232,7 +232,27 @@ calculation_templates (1) --> projects (N)
 
 ---
 
-## 8. Kosten-Abschaetzung (monatlich, nach Go-Live)
+## 8. Betriebswissen / Migrations-Workflow
+
+### DB-Migrationen auf Railway
+
+Railway PostgreSQL ist nur intern erreichbar (`postgres.railway.internal`). Fuer direkte SQL-Befehle (ALTER TABLE etc.) gibt es zwei Wege:
+
+1. **DATABASE_PUBLIC_URL** — Im Railway Dashboard unter PostgreSQL Service → Variables. Enthält die öffentliche URL mit TCP-Proxy. Damit lokal per `psql` verbinden:
+   ```
+   psql "<DATABASE_PUBLIC_URL>"
+   ```
+2. **Railway Dashboard → Data Tab** — SQL-Editor direkt im Browser (zeigt manchmal "no tables" wenn noch kein Traffic).
+
+**Bisherige Migrationen:**
+- 06.03.2026: `ALTER TABLE emails ALTER COLUMN sent_at TYPE TIMESTAMPTZ` (E2E-Test Fix)
+- 06.03.2026: 4x `ALTER TABLE ... ALTER COLUMN ... TYPE TIMESTAMPTZ USING ... AT TIME ZONE 'UTC'` (suppliers.created_at, projects.created_at, projects.updated_at, emails.created_at)
+
+**Wichtig:** Solange kein Alembic eingerichtet ist, muessen Schema-Aenderungen manuell per ALTER TABLE nachgezogen werden wenn sich models.py aendert. `init_db()` (create_all) aendert bestehende Spalten NICHT.
+
+---
+
+## 9. Kosten-Abschaetzung (monatlich, nach Go-Live)
 
 | Posten | Geschaetzt | Basis |
 |--------|-----------|-------|
