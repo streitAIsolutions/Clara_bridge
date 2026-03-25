@@ -15,8 +15,7 @@
 - **Railway:** Service + PostgreSQL live, alle 14 ENV Variables gesetzt ✅
 - **Telegram Webhook:** Registriert und aktiv ✅
 - **E2E-Test:** Bestanden (4 Durchlaeufe, Happy Path komplett) ✅
-- **Noch offen:** Webhook Secret Token (Sicherheit), ANTHROPIC_MODEL String verifizieren
-- **Naechster Schritt:** Uebersetzungsqualitaet bewerten, Webhook Secret Token, "Bearbeiten"-Flow
+- **Naechster Schritt:** Uebersetzungsqualitaet bewerten (P1.21), "Bearbeiten"-Flow, Attachment-Handling E2E
 
 **Entscheidungen Phase 1 (03.03.2026):**
 - E-Mail-Routing: Alles ueber E&W (Direktmodus spaeter als Feature-Flag)
@@ -140,6 +139,11 @@ Details zu jeder Phase: Siehe ARCHITECTURE.md Sektion 5.
 ---
 
 ## Changelog
+
+### 06.03.2026-B
+- QG-Auflagen erledigt: Webhook Secret Token, DateTime timezone=True, double-commit
+- ALTER TABLE auf Railway-DB (4 Spalten → TIMESTAMPTZ)
+- CLAUDE.md Blocker-Sektion bereinigt
 
 ### 06.03.2026
 - Phase 1 deployed auf Railway
