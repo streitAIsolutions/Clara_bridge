@@ -15,7 +15,7 @@
 ## 2. Code-Review
 
 ### DB-Writes
-- [ ] Jedes session.execute(update(...)) hat await session.commit() danach?
+- [ ] get_session() als async with Context Manager verwendet (auto-commit aktiv — kein manuelles session.commit() nötig)?
 - [ ] datetime.now(timezone.utc) statt datetime.utcnow()?
 
 ### Token + Secrets
